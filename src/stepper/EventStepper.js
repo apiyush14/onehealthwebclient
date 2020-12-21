@@ -16,13 +16,15 @@ const EventStepper=(props)=>{
 
 const [eventDetails,setEventDetails]=useState(
 {
+  eventId:null,
 	eventOrganizerFirstName:"",
 	eventOrganizerLastName:"",
 	eventOrganizerContactNumber:"",
 	eventName:"",
-    eventDescription: "",
-    eventStartDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
-    eventEndDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
+  eventDescription: "",
+  eventStartDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
+  eventEndDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
+  eventDisplayPic: ""
 });
 
 const [eventDisplayPic,setEventDisplayPic]=useState(null);
@@ -59,7 +61,7 @@ const [eventDisplayPic,setEventDisplayPic]=useState(null);
   	const formData=new FormData();
   	formData.append("file",event.target.files[0],event.target.files[0].name);
   	console.log(formData);
-  	axios.post('http://192.168.1.66:7001/event-details/uploadEventDisplayPic', formData);
+  	axios.post('http://192.168.1.66:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId, formData);
   }
  };
 
@@ -84,6 +86,25 @@ const backButtonStyle={
 
 const onNextClick=()=>{
  setActiveStep((activeStep)=>activeStep+1);
+ var eventStartDateJson=new Date(eventDetails.eventStartDate).toJSON();
+ var eventEndDateJson=new Date(eventDetails.eventEndDate).toJSON();
+ var eventDetailsRequest={
+  eventId:eventDetails.eventId,
+  eventOrganizerFirstName:eventDetails.eventOrganizerFirstName,
+  eventOrganizerLastName:eventDetails.eventOrganizerLastName,
+  eventOrganizerContactNumber:eventDetails.eventOrganizerContactNumber,
+  eventName:eventDetails.eventName,
+  eventDescription: eventDetails.eventDescription,
+  eventStartDate:eventStartDateJson,
+  eventEndDate:eventEndDateJson,
+  eventDisplayPic: eventDetails.eventDisplayPic
+ }
+ axios.put('http://192.168.1.66:7001/event-details/addEvent', {eventDetails:eventDetailsRequest})
+ .then(response=>setEventDetails((prevState)=>{
+  prevState.eventId=response.data;
+  return prevState;
+ }))
+ .catch(err=>console.log(err));
  /*axios.get('http://192.168.1.66:7001/run-details/getRuns/piyush123?page=1')
  .then(response => console.log(response))
  .catch(err => console.log(err));*/
@@ -114,7 +135,7 @@ const onNextClick=()=>{
       <Button style={backButtonStyle} onClick={()=>{setActiveStep((activeStep)=>activeStep-1)}}>
         Back
        </Button>
-      <Button style={nextButtonStyle} onClick={()=>{setActiveStep((activeStep)=>activeStep+1)}}>
+      <Button style={nextButtonStyle} onClick={onNextClick}>
         Next
        </Button>
      </StepContent>
