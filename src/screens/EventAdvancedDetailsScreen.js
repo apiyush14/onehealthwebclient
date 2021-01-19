@@ -38,6 +38,22 @@ const containerStyle={
         <Grid item xs={6} sm={5}>
           <TextField
             required
+            id="eventCoverPic"
+            name="eventCoverPic"
+            label="Event Cover Pic"
+            fullWidth
+            type="file"
+            InputLabelProps={{
+             shrink: true,
+            }}
+            onChange={(event)=>props.actionOnChange(event)}
+          />
+        </Grid>
+       </Grid>
+       <Grid container spacing={3} alignItems="center" justify="center">
+        <Grid item xs={6} sm={5}>
+          <TextField
+            required
             id="eventDisplayPic"
             name="eventDisplayPic"
             label="Event Display Pic"

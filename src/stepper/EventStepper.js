@@ -24,7 +24,8 @@ const [eventDetails,setEventDetails]=useState(
   eventDescription: "",
   eventStartDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
   eventEndDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
-  eventDisplayPic: ""
+  eventDisplayPic: "",
+  eventCoverPic: ""
 });
 
 const [eventDisplayPic,setEventDisplayPic]=useState(null);
@@ -56,12 +57,20 @@ const [eventDisplayPic,setEventDisplayPic]=useState(null);
   	return prevState;
   });
 
+    if("eventCoverPic"===event.target.id){
+    setEventDisplayPic(event.target.files[0])
+    const formData=new FormData();
+    formData.append("file",event.target.files[0],event.target.files[0].name);
+    console.log(formData);
+    axios.post('http://192.168.1.66:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId+'?imageType=COVER', formData);
+  }
+
   if("eventDisplayPic"===event.target.id){
   	setEventDisplayPic(event.target.files[0])
   	const formData=new FormData();
   	formData.append("file",event.target.files[0],event.target.files[0].name);
   	console.log(formData);
-  	axios.post('http://192.168.1.66:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId, formData);
+  	axios.post('http://192.168.1.66:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId+'?imageType=DISPLAY', formData);
   }
  };
 
@@ -97,6 +106,7 @@ const onNextClick=()=>{
   eventDescription: eventDetails.eventDescription,
   eventStartDate:eventStartDateJson,
   eventEndDate:eventEndDateJson,
+  eventCoverPic: eventDetails.eventCoverPic,
   eventDisplayPic: eventDetails.eventDisplayPic
  }
  axios.put('http://192.168.1.66:7001/event-details/addEvent', {eventDetails:eventDetailsRequest})
