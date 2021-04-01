@@ -12,7 +12,7 @@ import EventAdvancedDetailsScreen from '../screens/EventAdvancedDetailsScreen';
 
 const EventStepper=(props)=>{
  
- const [activeStep,setActiveStep]=useState(0);
+const [activeStep,setActiveStep]=useState(0);
 
 const [eventDetails,setEventDetails]=useState(
 {
@@ -25,13 +25,14 @@ const [eventDetails,setEventDetails]=useState(
   eventStartDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
   eventEndDate: new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0],
   eventDisplayPic: "",
-  eventCoverPic: ""
+  eventCoverPic: "",
+  eventMetricType: "Distance",
+  eventMetricValue: "1"
 });
 
 const [eventDisplayPic,setEventDisplayPic]=useState(null);
 
  const actionOnChange=(event)=>{	
- 	//console.log(event.target.files);
   setEventDetails((prevState)=>{
   	if("eventOrganizerFirstName"===event.target.id){
   	prevState.eventOrganizerFirstName=event.target.value;
@@ -53,6 +54,12 @@ const [eventDisplayPic,setEventDisplayPic]=useState(null);
   }
   else if("eventEndDate"===event.target.id){
   	prevState.eventEndDate=event.target.value;
+  }
+  else if("eventMetricType"===event.target.name){
+    prevState.eventMetricType=event.target.value;
+  }
+  else if("eventMetricValue"===event.target.name){
+    prevState.eventMetricValue=event.target.value;
   }
   	return prevState;
   });
@@ -107,7 +114,9 @@ const onNextClick=()=>{
   eventStartDate:eventStartDateJson,
   eventEndDate:eventEndDateJson,
   eventCoverPic: eventDetails.eventCoverPic,
-  eventDisplayPic: eventDetails.eventDisplayPic
+  eventDisplayPic: eventDetails.eventDisplayPic,
+  eventMetricType: eventDetails.eventMetricType,
+  eventMetricValue: eventDetails.eventMetricValue
  }
  axios.put('http://192.168.1.66:7001/event-details/addEvent', {eventDetails:eventDetailsRequest})
  .then(response=>setEventDetails((prevState)=>{
@@ -156,11 +165,11 @@ const onNextClick=()=>{
         Event Advanced Details
       </Typography>
      </StepLabel>
-     <StepContent><EventAdvancedDetailsScreen actionOnChange={actionOnChange}/>
+     <StepContent><EventAdvancedDetailsScreen actionOnChange={actionOnChange} eventDetails={eventDetails}/>
       <Button style={backButtonStyle} onClick={()=>{setActiveStep((activeStep)=>activeStep-1)}}>
         Back
        </Button>
-      <Button style={nextButtonStyle} onClick={()=>{setActiveStep((activeStep)=>activeStep+1)}}>
+      <Button style={nextButtonStyle} onClick={onNextClick}>
         Next
        </Button>
      </StepContent>

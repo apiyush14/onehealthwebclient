@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import 'fontsource-roboto';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -21,6 +21,20 @@ const containerStyle={
  justify: 'center',
 };
 
+const [eventMetricType,setEventMetricType]=useState("Distance");
+const [eventMetricValue,setEventMetricValue]=useState("1");
+
+const actionOnChange=(event)=>{
+  if("eventMetricType"===event.target.name){
+    setEventMetricType(event.target.value);
+  }
+  else if("eventMetricValue"===event.target.name){
+    setEventMetricValue(event.target.value);
+  }
+  props.actionOnChange(event);
+};
+
+
  return(
   <React.Fragment>
   <Container style={containerStyle}>
@@ -28,9 +42,29 @@ const containerStyle={
 
        <Grid container spacing={3} alignItems="center" justify="center">
         <Grid item xs={6} sm={5}>
-          <Select labelId="metricType" id="select" value="Distance">
+          <Select labelId="metricType" 
+          id="select"
+          name="eventMetricType"
+          value={eventMetricType}
+          onChange={(event)=>actionOnChange(event)}>
              <MenuItem value="Distance">Distance</MenuItem>
              <MenuItem value="Pace">Pace</MenuItem>
+          </Select>
+        </Grid>
+       </Grid>
+       <Grid container spacing={3} alignItems="center" justify="center">
+        <Grid item xs={6} sm={5}>
+          <Select labelId="metricValue" 
+          id="select"
+          name="eventMetricValue"
+          value={eventMetricValue}
+          onChange={(event)=>actionOnChange(event)}>
+             <MenuItem value="1">1 KM</MenuItem>
+             <MenuItem value="3">3 KM</MenuItem>
+             <MenuItem value="5">5 KM</MenuItem>
+             <MenuItem value="10">10 KM</MenuItem>
+             <MenuItem value="21">21 KM</MenuItem>
+             <MenuItem value="42">42 KM</MenuItem>
           </Select>
         </Grid>
        </Grid>
@@ -46,7 +80,7 @@ const containerStyle={
             InputLabelProps={{
              shrink: true,
             }}
-            onChange={(event)=>props.actionOnChange(event)}
+            onChange={(event)=>actionOnChange(event)}
           />
         </Grid>
        </Grid>
