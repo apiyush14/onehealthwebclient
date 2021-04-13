@@ -9,6 +9,7 @@ import axios from 'axios';
 import OrganizerDetailsScreen from '../screens/OrganizerDetailsScreen';
 import EventBasicDetailsScreen from '../screens/EventBasicDetailsScreen';
 import EventAdvancedDetailsScreen from '../screens/EventAdvancedDetailsScreen';
+import EventPreviewScreen from '../screens/EventPreviewScreen';
 
 const EventStepper=(props)=>{
  
@@ -27,7 +28,8 @@ const [eventDetails,setEventDetails]=useState(
   eventDisplayPic: "",
   eventCoverPic: "",
   eventMetricType: "Distance",
-  eventMetricValue: "1"
+  eventMetricValue: "1",
+  isEventApproved: "N"
 });
 
 const [eventDisplayPic,setEventDisplayPic]=useState(null);
@@ -100,7 +102,7 @@ const backButtonStyle={
  backgroundColor: 'black'
 };
 
-const onNextClick=()=>{
+const onNextClick=(step)=>{
  setActiveStep((activeStep)=>activeStep+1);
  var eventStartDateJson=new Date(eventDetails.eventStartDate).toJSON();
  var eventEndDateJson=new Date(eventDetails.eventEndDate).toJSON();
@@ -116,14 +118,23 @@ const onNextClick=()=>{
   eventCoverPic: eventDetails.eventCoverPic,
   eventDisplayPic: eventDetails.eventDisplayPic,
   eventMetricType: eventDetails.eventMetricType,
-  eventMetricValue: eventDetails.eventMetricValue
+  eventMetricValue: eventDetails.eventMetricValue,
+  isEventApproved: eventDetails.isEventApproved
  }
+
+ if(step===4){
+   eventDetailsRequest.isEventApproved="Y";
+ }
+
  axios.put('http://192.168.1.66:7001/event-details/addEvent', {eventDetails:eventDetailsRequest})
  .then(response=>setEventDetails((prevState)=>{
   prevState.eventId=response.data;
   return prevState;
  }))
- .catch(err=>console.log(err));
+ .catch(err=>{
+  setActiveStep((activeStep)=>activeStep-1);
+  console.log(err);
+ });
  /*axios.get('http://192.168.1.66:7001/run-details/getRuns/piyush123?page=1')
  .then(response => console.log(response))
  .catch(err => console.log(err));*/
@@ -139,7 +150,7 @@ const onNextClick=()=>{
       </Typography>
      </StepLabel>
      <StepContent><OrganizerDetailsScreen actionOnChange={actionOnChange} eventState={eventDetails}/>
-       <Button style={nextButtonStyle} onClick={onNextClick}>
+       <Button style={nextButtonStyle} onClick={()=>{onNextClick(1)}}>
         Next
        </Button>
      </StepContent>
@@ -154,7 +165,7 @@ const onNextClick=()=>{
       <Button style={backButtonStyle} onClick={()=>{setActiveStep((activeStep)=>activeStep-1)}}>
         Back
        </Button>
-      <Button style={nextButtonStyle} onClick={onNextClick}>
+      <Button style={nextButtonStyle} onClick={()=>{onNextClick(2)}}>
         Next
        </Button>
      </StepContent>
@@ -169,8 +180,24 @@ const onNextClick=()=>{
       <Button style={backButtonStyle} onClick={()=>{setActiveStep((activeStep)=>activeStep-1)}}>
         Back
        </Button>
-      <Button style={nextButtonStyle} onClick={onNextClick}>
+      <Button style={nextButtonStyle} onClick={()=>{onNextClick(3)}}>
         Next
+       </Button>
+     </StepContent>
+    </Step>
+
+    <Step key={4} style={stepStyle}>
+     <StepLabel>
+      <Typography variant="h6" gutterBottom>
+        Event Preview
+      </Typography>
+     </StepLabel>
+     <StepContent><EventPreviewScreen eventDetails={eventDetails}/>
+      <Button style={backButtonStyle} onClick={()=>{setActiveStep((activeStep)=>activeStep-1)}}>
+        Back
+       </Button>
+      <Button style={nextButtonStyle} onClick={()=>{onNextClick(4)}}>
+        Approve
        </Button>
      </StepContent>
     </Step>
