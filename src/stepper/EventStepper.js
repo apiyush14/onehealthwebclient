@@ -71,7 +71,7 @@ const [eventDisplayPic,setEventDisplayPic]=useState(null);
     const formData=new FormData();
     formData.append("file",event.target.files[0],event.target.files[0].name);
     console.log(formData);
-    axios.post('http://192.168.1.66:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId+'?imageType=COVER', formData);
+    axios.post('https://www.fitlers.tech:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId+'?imageType=COVER', formData);
   }
 
   if("eventDisplayPic"===event.target.id){
@@ -79,7 +79,7 @@ const [eventDisplayPic,setEventDisplayPic]=useState(null);
   	const formData=new FormData();
   	formData.append("file",event.target.files[0],event.target.files[0].name);
   	console.log(formData);
-  	axios.post('http://192.168.1.66:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId+'?imageType=DISPLAY', formData);
+  	axios.post('https://www.fitlers.tech:7001/event-details/uploadEventDisplayImage/'+eventDetails.eventId+'?imageType=DISPLAY', formData);
   }
  };
 
@@ -126,7 +126,7 @@ const onNextClick=(step)=>{
    eventDetailsRequest.isEventApproved="Y";
  }
 
- axios.put('http://192.168.1.66:7001/event-details/addEvent', {eventDetails:eventDetailsRequest})
+ axios.put('https://www.fitlers.tech:7001/event-details/addEvent', {eventDetails:eventDetailsRequest})
  .then(response=>setEventDetails((prevState)=>{
   prevState.eventId=response.data;
   return prevState;

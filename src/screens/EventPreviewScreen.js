@@ -15,14 +15,14 @@ const EventPreviewScreen=(props)=>{
      <CardMedia 
       style={styles.cardMediaContainerStyle}
       component="img"
-      image={"http://192.168.1.66:7001/event-details/getDisplayImage/"+props.eventDetails.eventId+"?imageType=DISPLAY"}
+      image={"https://www.fitlers.tech:7001/event-details/getDisplayImage/"+props.eventDetails.eventId+"?imageType=DISPLAY"}
      >
      </CardMedia>
 
      <CardMedia 
       style={styles.cardCoverContainerStyle}
       component="img"
-      image={"http://192.168.1.66:7001/event-details/getDisplayImage/"+props.eventDetails.eventId+"?imageType=COVER"} 
+      image={"https://www.fitlers.tech:7001/event-details/getDisplayImage/"+props.eventDetails.eventId+"?imageType=COVER"} 
      >
      </CardMedia>
 
